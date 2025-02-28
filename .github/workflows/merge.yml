@@ -18,7 +18,7 @@ jobs:
     steps:
       - run: |
           env
-          echo REFS $GITHUB_SHA $GITHUB_REF
+          echo REFS $GITHUB_SHA $GITHUB_REF 
 
       - name: Dump GitHub context
         env:

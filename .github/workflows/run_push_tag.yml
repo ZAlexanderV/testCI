@@ -1,3 +1,4 @@
+name: Run on TAG
 on:
   push:
     branches:
