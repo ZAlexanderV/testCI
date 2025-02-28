@@ -11,10 +11,21 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-    - run: |
+    - name: Initial data
+      env:
+        SHA_BEFORE: ${{ github.event.pull_request.before }}
+      run: |
         env
-        echo REFS $GITHUB_SHA $GITHUB_REF
+        echo "------------------"
+        echo REFS:$REFS GITHUB_SHA:$GITHUB_SHA GUTHIB_REF:$GITHUB_REF
+        echo MR_SHA:${{ github.event.pull_request.merge_commit_sha }} SHA_AFTER:${{ github.event.pull_request.after }} SHA_BEFORE:$SHA_BEFORE
         echo PR #${{ github.event.number }} has been merged
+
+    - name: Check that we have a tag
+      run: |
+        CHECK_TAG=$(git describe --exact-match 2 >/dev/null)
+        echo $CHECK_TAG
+        
 
   close_job:
     # this job will only run if the PR has been closed without being merged
