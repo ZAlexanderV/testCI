@@ -1,0 +1,25 @@
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - v.*
+
+jobs:
+  tag_job:
+    # this job will only run if the PR has been merged
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          env
+          echo REFS $GITHUB_SHA $GITHUB_REF 
+
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo $GITHUB_CONTEXT
+
+      - name: Dump Current SHA 
+        env:
+          GITHUB_SHA: ${{ github.event.pull_request.head.sha }}
+        run: echo $GITHUB_SHA
