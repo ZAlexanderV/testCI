@@ -1,0 +1,21 @@
+name: Build and Deploy to the Testnet
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    types:
+      - open
+      - reopened
+      - synchronize
+
+jobs:
+  init_job:
+    # this job will only run if the PR has been merged
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        env
+        echo REFS $GITHUB_SHA $GITHUB_REF
