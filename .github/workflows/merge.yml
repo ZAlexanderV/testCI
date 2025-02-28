@@ -19,3 +19,7 @@ jobs:
     - run: |
         env
         echo REFS $GITHUB_SHA $GITHUB_REF
+
+    - name: Dump GitHub context
+      env:
+      GITHUB_CONTEXT: ${{ toJson(github) }}
