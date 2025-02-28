@@ -24,3 +24,8 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo $GITHUB_CONTEXT
+
+      - name: Dump Current SHA 
+        env:
+          GITHUB_SHA: ${{ github.event.pull_request.head.sha }}
+        run: echo $GITHUB_SHA
