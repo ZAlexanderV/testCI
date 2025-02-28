@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - run: |
+        env
+        echo REFS $GITHUB_SHA $GITHUB_REF
         echo PR #${{ github.event.number }} has been merged
 
   close_job:
