@@ -23,7 +23,7 @@ jobs:
 
     - name: Check that we have a tag
       run: |
-        CHECK_TAG=$(git describe --exact-match 2 >/dev/null)
+        CHECK_TAG=$(git describe --exact-match 2 >/dev/null || true)
         echo $CHECK_TAG
         
 

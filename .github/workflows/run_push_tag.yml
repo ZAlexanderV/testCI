@@ -2,14 +2,15 @@ name: Run on TAG
 on:
   push:
     branches:
-      - main
+      - "main"
     tags:
-      - v.*
+      - "*"
 
 jobs:
   tag_job:
     # this job will only run if the PR has been merged
     runs-on: ubuntu-latest
+    if: github.ref_type == 'tag'
     steps:
       - run: |
           env
