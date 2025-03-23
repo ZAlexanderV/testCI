@@ -1,0 +1,17 @@
+name: Manual run test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  send-tg-msg:
+    name: Send TG message
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Telegram message
+        uses: ZAlexanderV/actions-telegram-notifier@191c728fcfbb1df7a1f3e241a7eb2dd22ce99319 # v2.0.1
+        with:
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          chat_id: ${{ secrets.TELEGRAM_CHAT_ID }}
+          notify_fields: 'repository,branch,commit'
+          title: 'Release deploy started.'
