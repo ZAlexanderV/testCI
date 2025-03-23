@@ -9,9 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Send Telegram message
-        uses: ZAlexanderV/actions-telegram-notifier@191c728fcfbb1df7a1f3e241a7eb2dd22ce99319 # v2.0.1
+        uses: proDreams/actions-telegram-notifier@77989e148886138d7c0b3ec175ba19f66e9500e3 # v2.0.1
         with:
           token: ${{ secrets.TELEGRAM_TOKEN }}
           chat_id: ${{ secrets.TELEGRAM_CHAT_ID }}
           notify_fields: 'repository,branch,commit'
           title: 'Release deploy started.'
+
+          
