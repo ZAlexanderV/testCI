@@ -77,12 +77,14 @@ jobs:
           echo "EMAIL_SUBJECT=New PR: ${PR_TITLE}" >> $GITHUB_ENV
 
       - name: Send Email
-        uses: peter-evans/sendgrid-action@759305bb5ea3ea76d9520c2c7fce146f656fac1a # v1.0.1
-        env:
-          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
-          SCRIPT_FILEPATH: .github/workflows/email-send.js
-          TO_EMAIL: ${{ secrets.TO_EMAIL }}
-          FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
-          EMAIL_SUBJECT: ${{ env.EMAIL_SUBJECT }}  
-          EMAIL_TEXT: ${{ env.EMAIL_TEXT }}  
-          EMAIL_HTML: ${{ env.EMAIL_HTML }}
+        uses: dawidd6/action-send-mail@6d98ae34d733f9a723a9e04e94f2f24ba05e1402 # v6
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{secrets.MAIL_USERNAME}}
+          password: ${{secrets.MAIL_PASSWORD}}
+          subject: ${{ env.EMAIL_SUBJECT }} 
+          to: ${{ secrets.TO_EMAIL }}
+          from: ${{ secrets.FROM_EMAIL }}
+          html_body: ${{ env.EMAIL_HTML }}
