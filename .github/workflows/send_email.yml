@@ -1,53 +1,19 @@
-name: Build and Deploy 
+name: Send Notification email
 on:
-  # push:
-  #   branches:
-  #     - main
   pull_request:
     branches:
       - main
     types:
       - opened
-      - reopened
-      - synchronize
+      - closed 
 
 jobs:
   init_job:
-    # this job will only run if the PR has been merged
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          env
-          echo REFS $GITHUB_SHA $GITHUB_REF 
-          ls -la
-
-      - name: Checkout  
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
-
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo $GITHUB_CONTEXT
-
-      - name: Dump Current SHA 
-        env:
-          GITHUB_SHA: ${{ github.event.pull_request.head.sha }}
-        run: echo $GITHUB_SHA
-
-      - name: Upload all project files
-        uses: actions/upload-artifact@v4
-        with:
-          name: all-project-files
-          path: |
-            .
-            !node_modules/  # Исключаем node_modules, если они есть
-            !.git/          # Исключаем .git директорию
-          retention-days: 1  # Опционально: как долго хранить артефакт
-
       - name: Prepare email content  
         id: email  
         run: | 
-          ls -la
           PR_TITLE="${{ github.event.pull_request.title }}"  
           PR_BODY="${{ github.event.pull_request.body }}"  
           PR_URL="${{ github.event.pull_request.html_url }}"  
