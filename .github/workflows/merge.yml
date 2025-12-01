@@ -82,7 +82,7 @@ jobs:
           SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
           SCRIPT_FILEPATH: .github/workflows/email-send.js
           TO_EMAIL: ${{ secrets.TO_EMAIL }}
-          FROM_EMAIL: 'no-reply@sendgrid.com'
+          FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
           EMAIL_SUBJECT: ${{ env.EMAIL_SUBJECT }}  
           EMAIL_TEXT: ${{ env.EMAIL_TEXT }}  
           EMAIL_HTML: ${{ env.EMAIL_HTML }}
