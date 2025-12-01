@@ -1,4 +1,4 @@
-name: Build and Deploy to the Testnet
+name: Build and Deploy 
 on:
   # push:
   #   branches:
@@ -39,3 +39,45 @@ jobs:
             !node_modules/  # Исключаем node_modules, если они есть
             !.git/          # Исключаем .git директорию
           retention-days: 1  # Опционально: как долго хранить артефакт
+
+      - name: Prepare email content  
+        id: email  
+        run: |  
+          PR_TITLE="${{ github.event.pull_request.title }}"  
+          PR_BODY="${{ github.event.pull_request.body }}"  
+          PR_URL="${{ github.event.pull_request.html_url }}"  
+            
+          # Generate email HTML 
+          EMAIL_HTML="<h2><strong>${PR_TITLE}</strong></h2>  
+          <p>${PR_BODY}</p>  
+          <p><a href=\"${PR_URL}\">PR Link</a></p>"  
+            
+          # Text version 
+          EMAIL_TEXT="PR Title: ${PR_TITLE}  
+
+          PR description:
+          ${PR_BODY}
+
+          PR Link: ${PR_URL}"  
+            
+          # Save to env
+          echo "EMAIL_HTML<<EOF" >> $GITHUB_ENV  
+          echo "$EMAIL_HTML" >> $GITHUB_ENV  
+          echo "EOF" >> $GITHUB_ENV  
+            
+          echo "EMAIL_TEXT<<EOF" >> $GITHUB_ENV  
+          echo "$EMAIL_TEXT" >> $GITHUB_ENV  
+          echo "EOF" >> $GITHUB_ENV  
+            
+          echo "EMAIL_SUBJECT=New PR: ${PR_TITLE}" >> $GITHUB_ENV
+
+      - name: Send Email
+        uses: peter-evans/sendgrid-action@759305bb5ea3ea76d9520c2c7fce146f656fac1a # v1.0.1
+        env:
+          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+          SCRIPT_FILEPATH: .github/workflows/email-send.js
+          TO_EMAIL: ${{ secrets.TO_EMAIL }}
+          FROM_EMAIL: 'no-reply@sendgrid.com'
+          EMAIL_SUBJECT: ${{ env.EMAIL_SUBJECT }}  
+          EMAIL_TEXT: ${{ env.EMAIL_TEXT }}  
+          EMAIL_HTML: ${{ env.EMAIL_HTML }}
