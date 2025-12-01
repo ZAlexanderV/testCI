@@ -1,0 +1,56 @@
+name: Send Notification email
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - closed 
+
+jobs:
+  init_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prepare email content  
+        id: email  
+        run: | 
+          PR_TITLE="${{ github.event.pull_request.title }}"  
+          PR_BODY="${{ github.event.pull_request.body }}"  
+          PR_URL="${{ github.event.pull_request.html_url }}"  
+            
+          # Generate email HTML 
+          EMAIL_HTML="<h2><strong>${PR_TITLE}</strong></h2>  
+          <p>${PR_BODY}</p>  
+          <p><a href=\"${PR_URL}\">PR Link</a></p>"  
+            
+          # Text version 
+          EMAIL_TEXT="PR Title: ${PR_TITLE}  
+
+          PR description:
+          ${PR_BODY}
+
+          PR Link: ${PR_URL}"  
+            
+          # Save to env
+          echo "EMAIL_HTML<<EOF" >> $GITHUB_ENV  
+          echo "$EMAIL_HTML" >> $GITHUB_ENV  
+          echo "EOF" >> $GITHUB_ENV  
+            
+          echo "EMAIL_TEXT<<EOF" >> $GITHUB_ENV  
+          echo "$EMAIL_TEXT" >> $GITHUB_ENV  
+          echo "EOF" >> $GITHUB_ENV  
+            
+          echo "EMAIL_SUBJECT=New PR: ${PR_TITLE}" >> $GITHUB_ENV
+
+      - name: Send Email
+        uses: dawidd6/action-send-mail@6d98ae34d733f9a723a9e04e94f2f24ba05e1402 # v6
+        with:
+          server_address: smtp.zoho.com
+          server_port: 465
+          secure: true
+          username: ${{secrets.MAIL_USERNAME}}
+          password: ${{secrets.MAIL_PASSWORD}}
+          subject: ${{ env.EMAIL_SUBJECT }} 
+          to: ${{ secrets.TO_EMAIL }}
+          from: ${{ secrets.FROM_EMAIL }}
+          html_body: ${{ env.EMAIL_HTML }}
